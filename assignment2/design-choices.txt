@@ -1,0 +1,75 @@
+# CMPE 452 Assignment 2
+> Backpropagation (BP) Artificial Neural Network (ANN)
+
+## To Run
+
+```python
+$ python3 cli.py <path_to_csv>
+```
+
+Example:
+```python
+$ python3 cli.py assignment2data.csv
+```
+
+## Design Choices
+
+### Data Normalization
+
+Data normalization has two steps in this implementation:
+
+    1. Convert all numbers to floats
+
+        When the CSV is imported from file, all of the types are strings. By converting the cells to floats, they can
+        be used in formulas without typecasting.
+
+    2. Apply Gaussian normalization the dataset
+
+        Gaussian normalization allows us to normalize the columns within the CSV. When the data is imported, there is
+        no real way to gauge the range of data in each column, and this means that weights could be affected differently
+        based on the range (min/max values) in each column. To shrink this range and make it more normalized, a
+        Gaussian normalization is applied to the dataset.
+
+
+### Number of Nodes Per Layer
+
+#### Input Layer
+
+There is one node for each of the inputs to the input layer. In our case this is eleven: one for each of the wind
+features.
+
+#### Hidden Layer
+
+Since there are three classes of outputs, we can initialize the hidden layer to have two nodes, each of which is a
+divider between classes.
+
+### Output Layer
+
+There must be one node for each of the three output classes. These form the output vector.
+
+
+### Weight Initialization
+
+Each of the hidden and output layer nodes has a list of weights associated with it. This list of weights corresponds to
+the list of inputs received by these nodes. i.e. Each hidden layer node has eleven weights in its weights list. Each of
+these weights is initialized with a random value within a given threshold. The threshold defaults to -1.0 to 1.0.
+
+### Feed Forward
+
+The feed forward part of the ANN is relatively straightforward. The eleven inputs to the input layer as passed through
+the input layer (without any value changes) and passed as inputs to the hidden layer. The hidden layer then sums the
+product of each input with its corresponding weight. We then use the sigmoid activation function to get a useful output
+value from the node. The hidden layer nodes the pass their outputs as inputs to the output layer nodes. The output layer
+performs the same summation which is then also passed to the sigmoid function. This gives us our output vector.
+
+### Backpropagation
+
+After feedforward phase, errors are calculated for both the output and hidden layers. Output is calculated first, then
+propagated back to the hidden layer. Changes are then made to the weights based on learning rate.
+
+### Training data
+
+There are 28 weights in the ANN. Using the formula `weights / (1 - accuracy)` with accuracy being 95%, we need to train
+with 560 samples.
+
+
